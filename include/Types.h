@@ -2,12 +2,14 @@
 #define DG_TYPES_H
 
 // 网格和多项式参数
-#define NX 400
+#define NX 200
 #define POLY_ORDER 2
 #define DIM_PK (POLY_ORDER + 1)
 #define NUM_GAUSS_POINTS 5
 #define CFL_NUMBER 0.1
 #define PI 3.14159265358979323846
+#define GAMMA 1.4
+#define M 1
 
 // 高斯积分点和权重
 typedef struct {
@@ -45,21 +47,21 @@ typedef struct {
 
 // 解数组
 typedef struct {
-    double init[NX][DIM_PK][3]; 
-    double uh[NX][DIM_PK][3];           // 当前解
-    double uh_stage1[NX][DIM_PK][3];    // RK3第一步
-    double uh_stage2[NX][DIM_PK][3];    // RK3第二步
-    double rhs[NX][DIM_PK];          // 右端项
-    double rhs_temp[NX][DIM_PK];     // 临时右端项
+    double init[NX][NUM_GAUSS_POINTS][3];// 初始条件投影值
+    double uh[NX][DIM_PK][3];            // 当前解
+    double uh_stage1[NX][DIM_PK][3];     // RK3第一步
+    double uh_stage2[NX][DIM_PK][3];     // RK3第二步
+    double rhs[NX][DIM_PK][3];           // 右端项
+    double rhs_temp[NX][DIM_PK][3];      // 临时右端项
 } SolutionArrays;
 
 // 通量计算工作数组
 typedef struct {
-    double uh_boundary[NX+2][DIM_PK];    // 扩展边界数组
-    double uh_gauss[NX][NUM_GAUSS_POINTS]; // 积分点处的解
-    double flux[NX+1][2];                  // 界面通量
-    double uh_right[NX+1][1];              // 右侧重构值
-    double uh_left[NX+1][1];               // 左侧重构值
+    double uh_boundary[NX+2][DIM_PK][3];    // 扩展边界数组
+    double uh_gauss[NX][NUM_GAUSS_POINTS][3]; // 积分点处的解
+    double flux[NX+1][2][3];                  // 界面通量
+    double uh_right[NX+1][1][3];              // 右侧重构值
+    double uh_left[NX+1][1][3];               // 左侧重构值
 } FluxArrays;
 
 // 完整的DG求解器结构
@@ -70,7 +72,6 @@ typedef struct {
     TimeInfo time;
     SolutionArrays solution;
     FluxArrays flux_work;
-    double exact_solution[NX][NUM_GAUSS_POINTS];
 } DGSolver;
 
 // 通量函数类型定义

@@ -1,7 +1,7 @@
 #include"Gauss_quadrature.h"
 #include<string.h>
 
-void guass_init_quadrature(GaussQuadrature* quad){
+void gauss_init_quadrature(GaussQuadrature* quad){
     quad->points[0] = -0.9061798459386639927976269;
     quad->points[1] = -0.5384693101056830910363144;
     quad->points[2] = 0.0;
